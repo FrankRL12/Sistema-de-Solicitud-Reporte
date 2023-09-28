@@ -1,0 +1,247 @@
+{% extends 'admin/base/base_admin.html' %} 
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Usuarios</h1>
+        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#agregarUsuarioModal"><i
+                class="fas fa-user fa-sm text-white-50"></i> Agregar Usuario</button>
+    </div>
+    <!-- Begin Page Content -->
+<div class="container-fluid">
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Usuarios</h6>
+    </div>
+    
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user fa-sm"></i></th>
+                        <th>Nombre</th>
+                        <th>Usuario</th>
+                        <th>Departamento</th>
+                        <th colspan="2">Opciones</th>
+                </thead>
+                {% for usuario in page_obj %}
+                <tbody>
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ usuario.get_full_name }}</td>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.departamento }}</td>
+                        <td><button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editarUsuarioModal{{ usuario.id }}"><i class="fas fa-edit"></i></a></td>
+                        <td><button class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#eliminarUsuarioModal{{ usuario.id }}"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+         <!-- Agregar el paginado al final de la tabla -->
+<div class="pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; Primera</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+    </div>
+</div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- /.container-fluid -->
+</div>
+
+<div class="modal fade" id="agregarUsuarioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'crear_usuario' %}" class="container" id="agregar-usuario-form">
+                    {% csrf_token %}
+                    <!-- Campos del formulario para agregar usuario aquí -->
+                    <div class="form-group">
+                        <label for="first_name">Nombre:</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name">
+                        <p id="first_name_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Apellido:</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name">
+                        <p id="last_name_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Nombre de Usuario:</label>
+                        <input type="text" class="form-control"  id="username" name="username">
+                        <p id="username_error" class="text-danger"></p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Clave:</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                        <p id="password_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="departamento">Departamento:</label>
+                        <input type="text" class="form-control" id="departamento" name="departamento">
+                        <p id="departamento_error" class="text-danger"></p>
+                    </div>
+                    <!-- Agrega los demás campos del formulario aquí -->
+                    <button type="button" class="btn btn-primary mt-3" id="agregar-usuario-btn">Agregar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modales de edición para cada diagnóstico -->
+{% for usuario in page_obj %}
+<div class="modal fade" id="editarUsuarioModal{{ usuario.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'editar_usuario' usuario.id %}">
+                    {% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name">Nombre:</label>
+                    <input type="text" class="form-control" id="first_name" value="{{ usuario.first_name }}" name="first_name">
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Apellidos:</label>
+                    <input type="text" class="form-control" id="last_name" value="{{ usuario.last_name }}" name="last_name">
+                </div>
+                <div class="form-group">
+                    <label for="username">Nombre De Usuario:</label>
+                    <input type="text" class="form-control" id="username" value="{{ usuario.username }}" name="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" class="form-control" id="password" placeholder="Actualiza Contraseña si es neseario" name="password">
+                </div>
+                <div class="form-group">
+                    <label for="departamento">Departamento:</label>
+                    <input type="text" class="form-control" id="departamento" value="{{ usuario.departamento }}" name="departamento">
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal para eliminar un Usuario-->
+<div class="modal fade" id="eliminarUsuarioModal{{ usuario.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estas seguro de que deseas eliminar este usuario?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const agregarUsuarioForm = document.getElementById("agregar-usuario-form");
+        const firstNameInput = document.getElementById("first_name");
+        const lastNameInput = document.getElementById("last_name");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const departamentoInput = document.getElementById("departamento");
+    
+        const firstNameError = document.getElementById("first_name_error");
+        const lastNameError = document.getElementById("last_name_error");
+        const usernameError = document.getElementById("username_error");
+        const passwordError = document.getElementById("password_error");
+        const departamentoError = document.getElementById("departamento_error");
+    
+        const agregarUsuarioBtn = document.getElementById("agregar-usuario-btn");
+        agregarUsuarioBtn.addEventListener("click", function () {
+            // Limpia los mensajes de error
+            firstNameError.textContent = "";
+            lastNameError.textContent = "";
+            usernameError.textContent = "";
+            passwordError.textContent = "";
+            departamentoError.textContent = "";
+    
+            // Valida cada campo según tus criterios
+            if (!firstNameInput.value.trim()) {
+                firstNameError.textContent = "El campo Nombre es obligatorio.";
+            }
+    
+            if (!lastNameInput.value.trim()) {
+                lastNameError.textContent = "El campo Apellido es obligatorio.";
+            }
+    
+            if (!usernameInput.value.trim()) {
+                usernameError.textContent = "El campo Nombre de Usuario es obligatorio.";
+            }
+    
+            if (!passwordInput.value.trim()) {
+                passwordError.textContent = "El campo Clave es obligatorio.";
+            }
+    
+            if (!departamentoInput.value.trim()) {
+                departamentoError.textContent = "El campo Departamento es obligatorio.";
+            }
+    
+            // Si no hay errores, envía el formulario
+            if (!firstNameError.textContent && !lastNameError.textContent && !usernameError.textContent && !passwordError.textContent && !departamentoError.textContent) {
+                agregarUsuarioForm.submit();
+            }
+        });
+    });
+    </script>
+    
+{% endblock content %}

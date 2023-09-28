@@ -1,0 +1,238 @@
+{% extends 'admin/base/base_admin.html' %} 
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Solicitudes</h1>
+    </div>
+    <!-- Begin Page Content -->
+<div class="container-fluid">
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Solicitudes</h6>
+    </div>
+    
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                <thead class="table-warning">
+                    <tr>
+                        <th><i class="fas fa-fw fa-clipboard-check"></i></th>
+                        <th>Usuario</th>
+                        <th>Departamento</th>
+                        <th>Detalle Equipo</th>
+                        <th>Descripcion</th>
+                        <th>Solicitud</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Prioridad</th>
+                        <th colspan="3">Opciones</th>
+                </thead>
+                <tbody>
+                    {% for solicitud in page_obj %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{solicitud.nombre}} {{solicitud.apellido}}</td>
+                        <td>{{solicitud.departamento}}</td>
+                        <td>{{solicitud.detalle_equipo}}</td>
+                        <td>{{solicitud.descripcion}}</td>
+                        <td>{{solicitud.mantenimiento}}</td>
+                        <td>{{solicitud.estado}}</td>
+                        <td>{{solicitud.fecha|date:"d/m/Y"}}</td>
+                        <td>{{solicitud.hora|time:"h:i A" }}</td>
+                        <td>{{solicitud.prioridad}}</td>
+                        <td><button class="btn btn-success btn-sm" data-toggle="modal" data-target="#opcionesSolicitudModal{{ solicitud.id }}"><i class="fas fa-edit"></i></button></td>
+                        <td><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reporteSolicitudModal{{ solicitud.id }}"><i class="fas fa-pdf">Crear Reporte</i></button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Agregar el paginado al final de la tabla -->
+<div class="pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; Primera</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+    </div>
+</div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- /.container-fluid -->
+</div>
+<!--Modal para crear el reporte-->
+{% for solicitud in page_obj %}
+<div class="modal fade" id="reporteSolicitudModal{{ solicitud.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Reporte</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'crear_reporte' solicitud.id %}" id="crear-reporte-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="usuario">Usuario:</label>
+                        <input type="text" class="form-control" id="usuario" value="{{ solicitud.nombre }}{{ solicitud.apellido }}" name="nombre_completo" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="departamento">Departamento:</label>
+                        <input type="text" class="form-control" value="{{ solicitud.departamento }}" id="departamento" name="departamento" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="servicio_solicitado">Servicio Solicitado:</label>
+                        <input type="text" class="form-control" value="{{ solicitud.detalle_equipo }}, {{ solicitud.descripcion }}"  id="servicio_solicitado"  name="servicio_solicitado" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="servicio_realizado">Servicio Realizado:</label>
+                        <textarea class="form-control" id="servicio_realizado" name="servicio_realizado" rows="3"></textarea>
+                        <p id="servicio_realizado_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="observacion">Observación:</label>
+                        <textarea class="form-control" id="observacion" name="observacion" rows="3"></textarea>
+                        <p id="observacion_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="tecnico">Técnico:</label>
+                        <input type="text" class="form-control" id="tecnico" name="tecnico">
+                        <p id="tecnico_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha">Fecha:</label>
+                        <input readonly="readonly" type="text" value="{{ solicitud.fecha|date:"d/m/Y" }}" class="form-control" id="fecha" name="fecha">
+                    </div>
+                    <div class="form-group">
+                        <label for="hora">Hora:</label>
+                        <input readonly="readonly" type="text" value="{{ solicitud.hora|time:"h:i A" }}" class="form-control" id="hora" name="hora">
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado:</label>
+                        <select class="form-control" name="estado" id="estado">
+                            <option value="En espera" {% if solicitud.estado == "En espera" %}selected{% endif %}>En espera</option>
+                            <option value="Aceptado" {% if solicitud.estado == "Aceptado" %}selected{% endif %}>Aceptado</option>
+                            <option value="En proceso" {% if solicitud.estado == "En proceso" %}selected{% endif %}>En proceso</option>
+                            <option value="Cancelado" {% if solicitud.estado == "Cancelado" %}selected{% endif %}>Cancelado</option>
+                            <option value="Finalizado" {% if solicitud.estado == "Finalizado" %}selected{% endif %}>Finalizado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="prioridad">Prioridad:</label>
+                        <input readonly="readonly" type="text" value="{{ solicitud.prioridad }}" class="form-control" id="prioridad" name="prioridad">
+                    </div>
+                    <button type="button" class="btn btn-primary mt-3" id="crear-reporte-btn">Crear Reporte</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Modal para agregar Prioridad y El estado-->
+<div class="modal fade" id="opcionesSolicitudModal{{ solicitud.id }}" tabindex="-1" role="dialog" aria-labelledby="exempleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Estados y Prioridad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'opciones_solicitudes' solicitud.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="estado">estado:</label>
+                        <select class="form-control" name="estado" id="estado">
+                            <option value="En espera" {% if solicitud.estado == "En espera" %}selected{% endif %}>En espera</option>
+                            <option value="Aceptado" {% if solicitud.estado == "Aceptado" %}selected{% endif %}>Aceptado</option>
+                            <option value="En proceso" {% if solicitud.estado == "En proceso" %}selected{% endif %}>En proceso</option>
+                            <option value="Cancelado" {% if solicitud.estado == "Cancelado" %}selected{% endif %}>Cancelado</option>
+                            <option value="Finalizado" {% if solicitud.estado == "Finalizado" %}selected{% endif %}>Finalizado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="prioridad">Prioridad:</label>
+                        <select class="form-control" name="prioridad" id="prioridad">
+                            <option value="Bajo" {% if solicitud.prioridad == "Bajo" %}selected{% endif %}>Bajo</option>
+                            <option value="Medio" {% if solicitud.prioridad == "Medio" %}selected{% endif %}>Medio</option>
+                            <option value="Alto" {% if solicitud.prioridad == "Alto" %}selected{% endif %}>Alto</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Opciones Agreagdas</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const crearReporteForm = document.getElementById("crear-reporte-form");
+        const servicioRealizadoInput = document.getElementById("servicio_realizado");
+        const observacionInput = document.getElementById("observacion");
+        const tecnicoInput = document.getElementById("tecnico");
+        const servicioRealizadoError = document.getElementById("servicio_realizado_error");
+        const observacionError = document.getElementById("observacion_error");
+        const tecnicoError = document.getElementById("tecnico_error");
+    
+        const crearReporteBtn = document.getElementById("crear-reporte-btn");
+        crearReporteBtn.addEventListener("click", function () {
+            servicioRealizadoError.textContent = "";
+            observacionError.textContent = "";
+            tecnicoError.textContent = "";
+    
+            if (!servicioRealizadoInput.value.trim()) {
+                servicioRealizadoError.textContent = "El campo Servicio Realizado es obligatorio.";
+            }
+    
+            if (!observacionInput.value.trim()) {
+                observacionError.textContent = "El campo Observación es obligatorio.";
+            }
+    
+            if (!tecnicoInput.value.trim()) {
+                tecnicoError.textContent = "El campo Técnico es obligatorio.";
+            }
+    
+            // Si no hay errores, envía el formulario
+            if (!servicioRealizadoError.textContent && !observacionError.textContent && !tecnicoError.textContent) {
+                crearReporteForm.submit();
+            }
+        });
+    });
+    </script>
+
+{% endblock content %}

@@ -1,0 +1,36 @@
+{% extends 'client/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<section class="container  p-3">
+    <div class="card border">
+        <div class="card-body">
+            <form method="post" action="" class="container">
+                {% csrf_token %}
+                <h1 class="card-title">Solicitar</h1>
+                <div class="form-group">
+                    <label for="detalle_equipo">Detalle del Equipo:</label>
+                    <input type="text" class="form-control" id="detalle_equipo" name="detalle_equipo">
+                </div>
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                  </div>
+                <div class="form-group">
+                    <label for="mantenimiento">Mantenimiento</label>
+                    <select class="form-control" name="mantenimiento" id="mantenimiento">
+                        <option value="">Seleccione el mantenimiento</option>
+                        <option value="Soporte">Soporte</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Software">Software</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Solicitar</button>
+            </form>
+        </div>
+    </div>
+    
+</section>
+{% endblock content %}

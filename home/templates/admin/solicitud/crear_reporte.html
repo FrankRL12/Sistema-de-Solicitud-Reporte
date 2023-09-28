@@ -1,0 +1,56 @@
+{% extends 'admin/base/base_admin.html' %} 
+{% load static %}
+
+{% block content %}
+<section class="container  p-3">
+    <div class="card tamaño border">
+        <div class="card-body">
+            <form method="post" action="" class="container">
+                {% csrf_token %}
+                <h1 class="card-title">Crear Reporte</h1>
+                <div class="form-group">
+                    <label for="usuario">Usuario:</label>
+                    <input type="text" class="form-control" id="usuario" value="{{ solicitud.nombre }}{{ solicitud.apellido }}" name="nombre_completo">
+                </div>
+                <div class="form-group">
+                    <label for="departamento">Departamento:</label>
+                    <input type="text" class="form-control" value="{{ solicitud.departamento }}" id="departamento" name="departamento">
+                </div>
+                <div class="form-group">
+                    <label for="servicio_solicitado">Servicio Solicitado:</label>
+                    <input type="textarea"  class="form-control" value="{{ solicitud.detalle_equipo }}, {{ solicitud.descripcion }}"  id="servicio_solicitado"  name="servicio_solicitado">
+                </div>
+                <div class="form-group">
+                    <label for="servicio_realizado">Servicio Realizado:</label>
+                    <textarea class="form-control" id="servicio_realizado" name="servicio_realizado" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="observacion">Observacion:</label>
+                    <textarea class="form-control" id="observacion" name="observacion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tecnico">Tecnico:</label>
+                    <input type="text" class="form-control" id="tecnico" name="tecnico">
+                </div>
+                <div class="form-group">
+                    <label for="fecha">Fecha:</label>
+                    <input type="text" value="{{ solicitud.fecha }}" class="form-control" id="fecha" name="fecha">
+                </div>
+                <div class="form-group">
+                    <label for="hora">Hora:</label>
+                    <input type="text" value="{{ solicitud.hora }}" class="form-control" id="hora" name="hora">
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <input type="text" value="{{ solicitud.estado }}" class="form-control" id="estado" name="estado">
+                </div>
+                <div class="form-group">
+                    <label for="prioridad">Prioridad:</label>
+                    <input type="text" value="{{ solicitud.prioridad }}" class="form-control" id="prioridad" name="prioridad">
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Crear Reporte</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

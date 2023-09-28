@@ -1,0 +1,65 @@
+{% extends 'client/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    
+    <div class="container-fluid">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4 m-5">
+
+        <div class="card-body">
+            <a href="{% url 'crear_solicitud' %}" class="btn btn-primary">Solicitar</a>
+            <a href="{% url 'reporte_client' %}" class="btn btn-danger">Reportes</a>
+            <a href="{% url 'historial_cliente' %}" class="btn btn-secondary">Historial</a>
+            <h1 class="card-title">Bienvenido: {{ user.username }}!</h1>
+            <h2>Nombre completo: {{ user.get_full_name }}</h2>
+            <h3>Correo electrónico: {{ user.email }}</h3>
+        </div>
+       
+        <div class="card-body">
+        <div class="card-body">
+            <div class="table-responsive">
+                <h1>Reportes</h1>
+                <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Servicio Solicitado</th>
+                            <th>Servicio Realizado</th>
+                            <th>Observacion</th>
+                            <th>Tecnico</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    {% if reportes %}
+                    <tbody>
+                        {% for reporte in reportes %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ reporte.servicio_solicitado}}</td>
+                            <td>{{ reporte.servicio_realizado }}</td>
+                            <td>{{ reporte.observacion }}</td>
+                            <td>{{ reporte.tecnico }}</td>
+                            <td>{{ reporte.fecha|date:"d/m/Y" }}</td>
+                            <td>{{ reporte.hora|time:"h:i A"  }}</td>
+                            <td>{{ reporte.estado }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+    <!-- /.container-fluid -->
+    
+    </div>
+    <!-- /.container-fluid -->
+    </div>
+{% endblock content %}

@@ -1,0 +1,61 @@
+{% extends 'client/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    
+<div class="container-fluid">
+<!-- DataTales Example -->
+<div class="card shadow mb-4 m-5">
+   
+    <div class="card-body">
+        <a href="{% url 'crear_solicitud' %}" class="btn btn-primary">Solicitar</a>
+        <a href="{% url 'reporte_client' %}" class="btn btn-danger">Reportes</a>
+        <a href="{% url 'historial_cliente' %}" class="btn btn-secondary">Historial</a>
+        <h1 class="card-title">Bienvenido: {{ user.username }}!</h1>
+        <h2>Nombre completo: {{ user.get_full_name }}</h2>
+        <h3>Correo electrónico: {{ user.email }}</h3>
+    </div>
+    
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center table-warning" id="dataTable" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Detalle Del Equipo</th>
+                        <th>Descripcion</th>
+                        <th>Solicitud</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                {% if solicitudes %}
+                <tbody>
+                    {% for solicitud in solicitudes %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ solicitud.detalle_equipo}}</td>
+                        <td>{{ solicitud.descripcion }}</td>
+                        <td>{{ solicitud.mantenimiento }}</td>
+                        <td>{{ solicitud.fecha|date:"d/m/Y" }}</td>
+                        <td>{{ solicitud.hora|time:"h:i A"  }}</td>
+                        <td>{{ solicitud.estado }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- /.container-fluid -->
+</div>
+{% endblock content %}

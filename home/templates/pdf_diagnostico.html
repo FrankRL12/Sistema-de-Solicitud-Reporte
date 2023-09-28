@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnostico PDF</title>
+    <style>
+        /* Agrega estilos aquí */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 5px;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid rgba(228, 228, 228, 0.91);
+            text-align: center;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            white-space: normal;
+            text-align: left; /* Añade alineación de texto izquierda */
+            overflow-wrap: break-word; /* Evita que el texto salga de la celda */
+            text-align: center;
+        }
+        .table th {
+            background-color: #f2f2f2;
+            font-weight: bold; /* Hace que los títulos se destaquen */
+        }
+        .descripcion-parrafo{
+            font-size: 14px;
+        }
+        .descripcion-quien{
+            font-size: 10px;
+        }
+        .contenido-1{
+            padding: 0;
+        }
+        .parrafo-chico{
+            font-size: 12px;
+        }
+        .Itss{
+            text-align: right;
+            font-size: 12px;
+        }
+        .logo-inicio{
+            width: 400px
+        }
+        .seccion2{
+            padding: 10px;
+        }
+        .color-letra{
+            color:#8f5f05;
+        }
+        .footer{
+            text-align: center;
+        }
+        .nombre{
+            text-transform: lowercase;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="imagen">
+                <ul><img class="logo-inicio" src="static\img\logotec.png" alt="Logo de la empresa">
+                    <img src="static\img\descripcion.jpg">
+                </ul>
+            </div>
+        </header>
+        <div class="seccion2">
+            <div>
+                <p class="Itss">Teapa, Tabasco, {% now "j/F/Y" %} <br>
+                    Oficio No.ITSS/DPV/AL/003/{% now "Y" %} <br>
+                    Asunto: El que se indica
+                </p>
+            </div>
+            <div>
+                <h1 class="nombre">{{ diagnosticos.nombre }} <br> 
+                    PRESENTA</h1>
+                <p class="descripcion-parrafo">Por medio de la presente se notifica el siguiente dictamen tecnico del siguiente equipo:</p>
+            </div>
+            <table class="table"> 
+                <thead>
+                    <tr>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>N/S</th>
+                        <th>Ubicacion</th>
+                        <th>Diagnostico</th>
+                        <th>Solucion</th>
+                        <th>Estado</th>
+                        <!-- Agrega más encabezados aquí -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ diagnosticos.marca }}</td>
+                        <td>{{ diagnosticos.n_serie }}</td>
+                        <td>{{ diagnosticos.modelo }}</td>
+                        <td>{{ diagnosticos.ubicacion }}</td>
+                        <td>{{ diagnosticos.diagnostico }}</td>
+                        <td>{{ diagnosticos.solucion }}</td>
+                        <td>{{ diagnosticos.estado }}</td>
+                        <!-- Agrega más celdas aquí -->
+                    </tr>
+                    <!-- Repite esta estructura para los 12 datos -->
+                </tbody>
+            </table>
+            <p class="descripcion-parrafo">Se realizara el siguiente dictamen para el tramite correspondiente.</p>
+            <!-- Agrega más detalles de acuerdo a tu modelo Historial -->
+            <div class="">
+                <h1>ATENTAMENTE</h1>
+                <p class="parrafo-chico">Excelencia en Educacion Tecnologica</p>
+            </div>
+    
+            <div>
+                <h1>ING. HUMBERTO JAVIER GUIRAO MARTINEZ <br> 
+                    AREA DE INFORMATICA INSTITUCIONAL
+                </h1>
+            </div>
+    
+            <div>
+                <p class="parrafo-chico">ccp.Lic.Jorge Luis Pedrero Cordova -Jefatura de Departamento de Recursos Materiales <br>
+                ccp.Archivo</p>
+            </div>
+        </div>
+        <!--Fin de la seccion-->
+        <footer class="final-footer">
+            <div>
+                <img src="static\img\footer1.jpg">
+            </div>
+            <div class="footer">
+                <div>
+                    <h4 class="color-letra">Carretera Teapa-Tacotalpa Km. 4.5, Fco. Javier Mina, C.P. 86801 Teapa, Tabasco 
+                        Tels. 932 32 4 06 50 ext 109, e-mail: informatica@regionsierra.tecnm.mx | regionsierra@regionsierra.tecnm.mx  | regionsierra.tecnm.mx </h4>
+                    <img src="static\img\footer.jpg">
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

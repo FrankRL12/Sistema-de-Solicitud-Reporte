@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historial PDF</title>
+    <style>
+        /* Agrega estilos aquí */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .table {
+            width: 800%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            white-space: normal;
+            text-align: left; /* Añade alineación de texto izquierda */
+            overflow-wrap: break-word; /* Evita que el texto salga de la celda */
+            text-align: center;
+        }
+        .table th {
+            background-color: #f2f2f2;
+            font-weight: bold; /* Hace que los títulos se destaquen */
+        }
+        .descripcion-parrafo{
+            padding: 6px;
+            font-size: 14px;
+        }
+        .descripcion-quien{
+            font-size: 10px;
+        }
+        .contenido-1{
+            padding: 0;
+        }
+        .seccion2{
+            padding: 10px;
+        }
+        .Itss{
+            text-align: right;
+            font-size: 12px;
+        }
+        .color-letra{
+            color:#8f5f05;
+        }
+        .logo-inicio{
+            width: 400px
+        }
+        .parrafo-chico{
+            font-size: 12px;
+        }
+        .final-footer{
+            padding: 30px;
+        }
+        .footer{
+            text-align: center;
+        }
+    </style>
+</head>
+{% load static %}
+<body>
+    <div class="container">
+        <header>
+            <div class="imagen">
+                <ul><img class="logo-inicio" src="static\img\logotec.png" alt="Logo de la empresa">
+                    <img src="static\img\descripcion.jpg">
+                </ul>
+            </div>
+        </header>
+        <div class="seccion2">
+            <div>
+                <p class="Itss">Teapa, Tabasco, {% now "j/F/Y" %} <br>
+                    Oficio No.ITSS/DPV/AL/003/{% now "Y" %} <br>
+                    Asunto: El que se indica
+                </p>
+            </div>
+            <div>
+                <h1>{{ historial.nombre_completo }} <br> 
+                    PRESENTA</h1>
+                <p class="descripcion-parrafo">Por medio de la presente se notifica el siguiente dictamen tecnico del siguiente equipo:</p>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Depart</th>
+                        <th>Servicio S</th>
+                        <th>Servicio R</th>
+                        <th>Obser</th>
+                        <th>Tecnico</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Fecha F</th>
+                        <th>Hora F</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <!-- Agrega más encabezados aquí -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ historial.nombre_completo }}</td>
+                        <td>{{ historial.departamento }}</td>
+                        <td>{{ historial.servicio_solicitado }}</td>
+                        <td>{{ historial.servicio_realizado }}</td>
+                        <td>{{ historial.observacion }}</td>
+                        <td>{{ historial.tecnico }}</td>
+                        <td>{{ historial.fecha|date:"d/m/Y" }}</td>
+                        <td>{{ historial.hora|time:"h:i A" }}</td>
+                        <td>{{ historial.fecha_final|date:"d/m/Y" }}</td>
+                        <td>{{ historial.hora_final|time:"h:i A" }}</td>
+                        <td>{{ historial.estado }}</td>
+                        <td>{{ historial.prioridad }}</td>
+                        <!-- Agrega más celdas aquí -->
+                    </tr>
+                    <!-- Repite esta estructura para los 12 datos -->
+                </tbody>
+            </table>
+            <!-- Agrega más detalles de acuerdo a tu modelo Historial -->
+            <p class="descripcion-parrafo">Se realizara el siguiente dictamen para el tramite correspondiente.</p>
+            <!-- Agrega más detalles de acuerdo a tu modelo Historial -->
+            <div class="">
+                <h1>ATENTAMENTE</h1>
+                <p class="parrafo-chico">Excelencia en Educacion Tecnologica</p>
+            </div>
+    
+            <div>
+                <h1>ING. HUMBERTO JAVIER GUIRAO MARTINEZ <br> 
+                    AREA DE INFORMATICA INSTITUCIONAL
+                </h1>
+            </div>
+    
+            <div>
+                <p class="parrafo-chico">ccp.Lic.Jorge Luis Pedrero Cordova -Jefatura de Departamento de Recursos Materiales <br>
+                ccp.Archivo</p>
+            </div>
+        </div>
+        
+        <footer class="final-footer">
+            <div>
+                <img src="static\img\footer1.jpg">
+            </div>
+            <div class="footer">
+                <div>
+                    <h4 class="color-letra">Carretera Teapa-Tacotalpa Km. 4.5, Fco. Javier Mina, C.P. 86801 Teapa, Tabasco 
+                        Tels. 932 32 4 06 50 ext 109, e-mail: informatica@regionsierra.tecnm.mx | regionsierra@regionsierra.tecnm.mx  | regionsierra.tecnm.mx </h4>
+                    <img src="static\img\footer.jpg">
+                </div>
+            </div>
+        </footer>
+        <!-- Agrega más detalles de acuerdo a tu modelo Historial -->
+    </div>
+</body>
+</html>

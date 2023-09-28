@@ -1,0 +1,132 @@
+body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header{
+    background-color: rgb(167, 104, 21);
+}
+.contenedor {
+    width: 90%;
+    margin: auto;
+}
+  
+header {
+    padding: 14px 0;
+}
+  
+header .contenedor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+img .logo {
+    width: 50px;
+}
+  
+header nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-right: 20px;
+}
+header nav a:hover,
+header nav a.activo {
+    color: #FFF;
+}
+.login-fondo{
+  background-image: url(../img/loginfondo.jpg);
+}
+footer {
+  background-color: rgb(167, 104, 21);
+  color: #fff;
+  padding: 30px 0;
+  margin-top: auto;
+}
+  
+  footer h4 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  
+footer p {
+  margin: 0 0 10px;
+}
+  
+  .social-media-icons {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .social-media-icons li {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .social-media-icons li:last-child {
+    margin-right: 0;
+  }
+  
+  .social-media-icons a {
+    color: #fff;
+    font-size: 20px;
+  }
+  
+  /* Responsiveness */
+  @media (max-width: 767px) {
+    footer .container {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  
+    footer .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  
+    footer h4 {
+      margin-top: 20px;
+    }
+  
+    .social-media-icons {
+      margin-top: 20px;
+    }
+  
+    .social-media-icons li {
+      margin-right: 20px;
+    }
+  
+    .social-media-icons li:last-child {
+      margin-right: 0;
+    }
+  }
+  .logout-btn {
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .logout-btn:hover {
+    background-color: #eee;
+  }
+  
+ 
+  
+  .logout-btn span {
+    margin-left: 5px;
+  }
+  
+  

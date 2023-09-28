@@ -1,0 +1,327 @@
+{% extends 'admin/base/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Diagnosticos</h1>
+        <button type="button" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#agregarDiagnosticoModal">
+            <i class="fas fa-fw fa-stethoscope fa-sm text-white-50"></i> Agregar Diagnóstico
+        </button>
+    </div>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Diagnosticos</h6>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                        <thead class="table-warning">
+                            <!-- Encabezados de la tabla aquí -->
+                            <th><i class="fas fa-fw fa-stethoscope"></i></th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>N/S</th>
+                            <th>Ubicacion</th>
+                            <th>Diagnosticos</th>
+                            <th>Solucion</th>
+                            <th>Estado</th>
+                            <th colspan="3">Opciones</th>
+                        </thead>
+                        <tbody>
+                            {% for diagnostico in page_obj %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{ diagnostico.marca }}</td>
+                                <td>{{ diagnostico.modelo }}</td>
+                                <td>{{ diagnostico.n_serie }}</td>
+                                <td>{{ diagnostico.ubicacion }}</td>
+                                <td>{{ diagnostico.diagnostico }}</td>
+                                <td>{{ diagnostico.solucion }}</td>
+                                <td>{{ diagnostico.estado }}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editarDiagnosticoModal{{ diagnostico.id }}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <!-- Botón para abrir el modal de eliminación con ID único -->
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#eliminarDiagnosticoModal{{ diagnostico.id }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                                <td><a class="btn btn-danger btn-sm" href="{% url 'diagnostico_pdf' diagnostico.id %}" target="_blank"><i class="fas fa-pdf">PDF</i></a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Agregar el paginado al final de la tabla aquí -->
+                <div class="pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; Primera</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                            </li>
+                        {% endif %}
+                
+                        <li class="page-item disabled">
+                            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                        </li>
+                
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- /.container-fluid -->
+
+<!-- Modal para agregar diagnóstico -->
+<div class="modal fade" id="agregarDiagnosticoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Diagnóstico</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="" class="container" id="agregar-diagnostico-form">
+                    {% csrf_token %}
+                    <!-- Campos del formulario para agregar diagnóstico aquí -->
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" class="form-control" value="{{ diagnost.nombre }}" id="nombre" name="nombre">
+                        <p id="nombre_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="marca">Marca:</label>
+                        <input type="text" class="form-control" id="marca" name="marca">
+                        <p id="marca_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="modelo">Modelo:</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo">
+                        <p id="modelo_error" class="text-danger"></p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="n_serie">Número de Serie:</label>
+                        <input type="text" class="form-control" id="n_serie" name="n_serie">
+                        <p id="n_serie_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion">Ubicacion:</label>
+                        <input type="text" class="form-control" id="ubicacion" name="ubicacion">
+                        <p id="ubicacion_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="diagnostico">Diagnóstico:</label>
+                        <textarea class="form-control" id="diagnostico" name="diagnostico" rows="3"></textarea>
+                        <p id="diagnostico_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="solucion">Solución:</label>
+                        <textarea class="form-control" id="solucion" name="solucion" rows="3"></textarea>
+                        <p id="solucion_error" class="text-danger"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado:</label>
+                        <select class="form-control" name="estado" id="estado">
+                            <option value="">Seleccione El Estado</option>
+                            <option value="activo">activo</option>
+                            <option value="en reparación">en reparación</option>
+                            <option value="de baja">de baja</option>
+                        </select>
+                        <p id="estado_error" class="text-danger"></p>
+                    </div>
+                    <!-- Agrega los demás campos del formulario aquí -->
+                    <button type="button" class="btn btn-primary mt-3" id="agregar-diagnostico-btn">Agregar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modales de edición para cada diagnóstico -->
+{% for diagnostico in page_obj %}
+<div class="modal fade" id="editarDiagnosticoModal{{ diagnostico.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Diagnóstico</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario de edición para este diagnóstico -->
+                <form method="post" action="{% url 'editar_diagnostico' diagnostico.id %}" class="container">
+                    {% csrf_token %}
+                    <!-- Campos del formulario para editar diagnóstico aquí -->
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" class="form-control" value="{{ diagnostico.nombre }}" id="nombre" name="nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="marca">Marca:</label>
+                        <input type="text" class="form-control" value="{{ diagnostico.marca }}" id="marca" name="marca">
+                    </div>
+                    <div class="form-group">
+                        <label for="modelo">Modelo:</label>
+                        <input type="text" class="form-control" value="{{ diagnostico.modelo }}" id="modelo" name="modelo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="n_serie">Número de Serie:</label>
+                        <input type="text" class="form-control" value="{{ diagnostico.n_serie }}" id="n_serie" name="n_serie">
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion">Ubicacion:</label>
+                        <input type="text" class="form-control" value="{{ diagnostico.ubicacion }}" id="ubicacion" name="ubicacion">
+                    </div>
+                    <div class="form-group">
+                        <label for="diagnostico">Diagnostico:</label>
+                        <textarea class="form-control" id="diagnostico" name="diagnostico" rows="3">{{ diagnostico.diagnostico }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="solucion">Solucion:</label>
+                        <textarea class="form-control" id="solucion" name="solucion" rows="3">{{ diagnostico.solucion }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado:</label>
+                        <select class="form-control" name="estado" id="estado">
+                            <option value="activo" {% if diagnostico.estado == "activo" %}selected{% endif %}>activo</option>
+                            <option value="en reparacion" {% if diagnostico.estado == "en reparacion" %}selected{% endif %}>en reparacion</option>
+                            <option value="de vaja" {% if diagnostico.estado == "de vaja" %}selected{% endif %}>de vaja</option>
+                        </select>
+                    </div>
+                    <!-- Agrega los demás campos del formulario aquí -->
+                    <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de eliminación para cada diagnóstico -->
+<div class="modal fade" id="eliminarDiagnosticoModal{{ diagnostico.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Diagnóstico</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este diagnóstico?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a href="{% url 'eliminar_diagnostico' diagnostico.id %}" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const agregarDiagnosticoForm = document.getElementById("agregar-diagnostico-form");
+        const nombreInput = document.getElementById("nombre");
+        const marcaInput = document.getElementById("marca");
+        const modeloInput = document.getElementById("modelo");
+        const nSerieInput = document.getElementById("n_serie");
+        const ubicacionInput = document.getElementById("ubicacion");
+        const diagnosticoInput = document.getElementById("diagnostico");
+        const solucionInput = document.getElementById("solucion");
+        const estadoInput = document.getElementById("estado");
+    
+        const nombreError = document.getElementById("nombre_error");
+        const marcaError = document.getElementById("marca_error");
+        const modeloError = document.getElementById("modelo_error");
+        const nSerieError = document.getElementById("n_serie_error");
+        const ubicacionError = document.getElementById("ubicacion_error");
+        const diagnosticoError = document.getElementById("diagnostico_error");
+        const solucionError = document.getElementById("solucion_error");
+        const estadoError = document.getElementById("estado_error");
+    
+        const agregarDiagnosticoBtn = document.getElementById("agregar-diagnostico-btn");
+        agregarDiagnosticoBtn.addEventListener("click", function () {
+            // Limpia los mensajes de error
+            nombreError.textContent = "";
+            marcaError.textContent = "";
+            modeloError.textContent = "";
+            nSerieError.textContent = "";
+            ubicacionError.textContent = "";
+            diagnosticoError.textContent = "";
+            solucionError.textContent = "";
+            estadoError.textContent = "";
+    
+            // Valida cada campo según tus criterios
+            if (!nombreInput.value.trim()) {
+                nombreError.textContent = "El campo Nombre es obligatorio.";
+            }
+    
+            if (!marcaInput.value.trim()) {
+                marcaError.textContent = "El campo Marca es obligatorio.";
+            }
+    
+            if (!modeloInput.value.trim()) {
+                modeloError.textContent = "El campo Modelo es obligatorio.";
+            }
+    
+            // Realiza validaciones adicionales según tus necesidades para los demás campos
+            if (!marcaInput.value.trim()) {
+                nSerieError.textContent = "El campo Numero de serie es obligatorio.";
+            }
+
+            if (!ubicacionInput.value.trim()) {
+                ubicacionError.textContent = "El campo ubicacion es obligatorio.";
+            }
+
+            if (!diagnosticoInput.value.trim()) {
+                diagnosticoError.textContent = "El campo diagnostico es obligatorio.";
+            }
+
+            if (!solucionInput.value.trim()) {
+                solucionError.textContent = "El campo solucion es obligatorio.";
+            }
+    
+            if (!estadoInput.value) {
+                estadoError.textContent = "Seleccione un estado.";
+            }
+    
+            // Si no hay errores, envía el formulario
+            if (!nombreError.textContent && !marcaError.textContent && !modeloError.textContent && !nSerieError.textContent && !ubicacionError.textContent && !diagnosticoError.textContent && !solucionError.textContent && !estadoError.textContent) {
+                agregarDiagnosticoForm.submit();
+            }
+        });
+    });
+    </script>
+
+{% endblock content %}

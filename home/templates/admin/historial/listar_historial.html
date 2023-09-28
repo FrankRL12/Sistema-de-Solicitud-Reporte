@@ -1,0 +1,118 @@
+{% extends 'admin/base/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Historiales</h1>
+    </div>
+    <!-- Begin Page Content -->
+<div class="container-fluid">
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Historial</h6>
+    </div>
+    
+    <div class="card-body">
+        <!-- Agregar el formulario de selección de rango de fechas -->
+        <form method="get" action="{% url 'historial' %}" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="start_date">Fecha inicial:</label>
+                    <input type="date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="end_date">Fecha final:</label>
+                    <input type="date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary mt-4">Consultar</button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                <thead class="table-warning">
+                    <tr>
+                        <th><i class="fas fa-fw fas fa-history"></i></th>
+                        <th>Usuario</th>
+                        <th>Departamento</th>
+                        <th>Servicio Solicitado</th>
+                        <th>Servicio Realizado</th>
+                        <th>Observacion</th>
+                        <th>Tecnico</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Fecha Final</th>
+                        <th>Hoara Final</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <th colspan="3">Opciones</th>
+                        <!-- Resto de encabezados -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for historial in page_obj %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ historial.nombre_completo }}</td>
+                        <td>{{ historial.departamento }}</td>
+                        <td>{{ historial.servicio_solicitado }}</td>
+                        <td>{{ historial.servicio_realizado }}</td>
+                        <td>{{ historial.observacion }}</td>
+                        <td>{{ historial.tecnico }}</td>
+                        <td>{{ historial.fecha|date:"d/m/Y" }}</td>
+                        <td>{{ historial.hora|time:"h:i A" }}</td>
+                        <td>{{ historial.fecha_final|date:"d/m/Y" }}</td>
+                        <td>{{ historial.hora_final|time:"h:i A" }}</td>
+                        <td>{{ historial.estado }}</td>
+                        <td>{{ historial.prioridad }}</td>
+                        <td><a class="btn btn-danger btn-sm" href="{% url 'generar_pdf' historial.id %}" target="_blank"><i class="fas fa-pdf">PDF</i></a></td>
+                        <!-- Resto de campos -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Agregar el paginado al final de la tabla -->
+        <div class="pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&page=1">&laquo; Primera</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&page={{ page_obj.previous_page_number }}">Anterior</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&page={{ page_obj.next_page_number }}">Siguiente</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        
+    </div>
+</div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- /.container-fluid -->
+</div>
+{% endblock content %}
